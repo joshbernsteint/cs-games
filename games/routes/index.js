@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path'
-import { createUser,loginUser } from "../data/users.js";
+import { createUser,getUserById,loginUser } from "../data/users.js";
 import questions from './questions.js'
 import { answerQuestion, createTeam, findTeamOfUser, getAllTeams, getDoneQuestions, joinTeam } from "../data/teams.js";
 
@@ -152,10 +152,17 @@ router.get("/admin5698712/team_rank", async (req,res) => {
     try {
         const allData = await getAllTeams();
         const rank = [];
-        allData.forEach(el => {
+        for (let j = 0; j < allData.length; j++) {
+            const el = allData[j];
             const complete = el.finishedQuestions.length;
-            rank.push({team: el.teamName, complete: complete});
-        });
+            const memberNames = [];
+            for (let i = 0; i < el.members.length; i++) {
+                const userData = await getUserById(el.members[i]);
+                memberNames.push(userData.username);
+            }
+            
+            rank.push({team: el.teamName, complete: complete, members: memberNames});
+        }
         rank.sort((x,y) => {
             return y.complete - x.complete;
         });

@@ -47,7 +47,7 @@ function Admin({username, ...props}){
             {
                 rank.map((el,i) => (
                     <li key={i}>
-                        <b>{el.team}</b>
+                        <b>{el.team}: {el.complete}</b>
                     </li>
                 ))
                 }
