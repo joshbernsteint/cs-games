@@ -27,13 +27,13 @@ async function createTeam(teamName, password, username){
     });
 
     const thisUser = await getUser(u_name);
-
     const hashed = await bcrypt.hash(psswrd,saltRounds);
 
     const result = {
         teamName: name,
         password: hashed,
         members: [thisUser._id.toString()],
+        finishedQuestions: [],
     };
 
     const teamsCollection = await teams();
@@ -45,26 +45,32 @@ async function createTeam(teamName, password, username){
     return {insertedUser: true, teamName: name, _id: insert_result.insertedId.toString()};
 }
 
-async function joinTeam(teamId, password, username){
-    const id = checkAndTrim(teamId, "teamId");
+async function joinTeam(teamName, password, username){
+    const tName = checkAndTrim(teamName, "teamName");
     const psswrd = checkAndTrim(password, "password");
-    if(!ObjectId.isValid(id)) throw 'teamId must be a valid ObjectId';
     const name = checkAndTrim(username, "username");
 
     const isThere = await getUser(name);
     if(!isThere) throw "User could not be found";
 
+
+    let letFound = false;
     const allTeams = await getAllTeams();
     for (let i = 0; i < allTeams.length; i++) {
         const element = allTeams[i];
-        if(element._id.toString() === id){
-            if(!(await bcrypt.compare(psswrd, element.password))) throw "Incorrect password or id";
+        if(element.teamName === tName){
+            letFound = true;
+            if(!(await bcrypt.compare(psswrd, element.password))) throw "Incorrect password or name";
             else break;
         }
     }
 
+    if(!letFound){
+        throw "Incorrect password or name";
+    }
+
     const teamsCollection = await teams();
-    const updateResult = await teamsCollection.findOneAndUpdate({_id: new ObjectId(id)}, {$push: {members: isThere._id.toString()}}, {returnDocument: "after"});
+    const updateResult = await teamsCollection.findOneAndUpdate({teamName: tName}, {$push: {members: isThere._id.toString()}}, {returnDocument: "after"});
     return updateResult;
 
 }
@@ -76,9 +82,42 @@ async function getAllTeams(){
     return all;
 }
 
+async function answerQuestion(teamId, questionId){
+    const id = checkAndTrim(teamId, "teamId");
+    if(!ObjectId.isValid(id)) throw 'teamId must be a valid ObjectId';
+    const question_id = checkAndTrim(questionId, "questionId");
+    const teamsCollection = await teams();
+    const updateResult = await teamsCollection.findOneAndUpdate({_id: new ObjectId(id)}, {$push: {finishedQuestions: question_id}}, {returnDocument: "after"});
+    return updateResult;
+}
+
+async function getDoneQuestions(teamId){
+    const id = checkAndTrim(teamId, "teamId");
+    if(!ObjectId.isValid(id)) throw 'teamId must be a valid ObjectId';
+    const teamsCollection = await teams();
+    const done = await teamsCollection.findOne({_id: new ObjectId(id)});
+    // console.log(done);
+    return done.finishedQuestions;
+}
+
+async function findTeamOfUser(username){
+    const user = await getUser(username);
+    const allTeams = await getAllTeams();
+    for (let i = 0; i < allTeams.length; i++) {
+        const team = allTeams[i];
+        if(team.members.includes(user._id.toString())){
+            return team;
+        }
+    }
+    return undefined;
+}
+
 
 export{
     createTeam,
     joinTeam,
     getAllTeams,
+    answerQuestion,
+    getDoneQuestions,
+    findTeamOfUser
 }

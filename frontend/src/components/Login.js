@@ -25,6 +25,9 @@ function Login(props){
             errorRef.current.hidden = true;
             props.setLoggedIn(true);
             props.setUsername(data.username);
+            const teamData = await axios.post("/teams/get_user", {username: data.username});
+            console.log(teamData.data);
+            if(!teamData.data.error) props.setTeamData(teamData.data);
             navigate("/");
 
         }

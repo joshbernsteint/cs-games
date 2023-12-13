@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import path, { dirname } from 'path'
 import { createUser,loginUser } from "../data/users.js";
 import questions from './questions.js'
-import { createTeam, getAllTeams, joinTeam } from "../data/teams.js";
+import { answerQuestion, createTeam, findTeamOfUser, getAllTeams, getDoneQuestions, joinTeam } from "../data/teams.js";
 
 
 const [parsedQuestions,parsedWithAnswers] = (() => {
@@ -19,8 +19,8 @@ const [parsedQuestions,parsedWithAnswers] = (() => {
             line2.push({id: `${i}-${j}`, title: e2.title, html: e2.html});
 
         }
-        ret.push(line);
-        ret2.push(line);
+        ret.push(line)
+        ret2.push(line2);
     }
     return [ret2, ret];
 })();
@@ -74,7 +74,7 @@ router.get("/admin5698712", async (req,res) => {
 
 router.get("/question_src", async (req,res) => {
     if(currentStage > 0){
-        res.json({questions: parsedQuestions.slice(maxStage-currentStage)});
+        res.json({questions: parsedQuestions.slice(0,currentStage)});
     }
     else{
         res.json({questions: []});
@@ -85,7 +85,7 @@ router.get("/question_src", async (req,res) => {
 router.post("/teams/create", async (req,res) => {
     try {
         const body = req.body;
-        const result = await createTeam(body.teamName, body.password);
+        const result = await createTeam(body.teamName, body.password, body.username);
         res.json({...result, error: false});
     } catch (error) {
         res.json({error: true, msg: error.toString()});
@@ -102,8 +102,67 @@ router.post("/teams/join", async (req,res) => {
     }
 });
 
-router.post("/get_teams", async (req,res) => {
+router.get("/get_teams", async (req,res) => {
     res.json({teams: await getAllTeams()});
+});
+
+router.post("/teams/get_user", async (req,res) => {
+    try {
+        const body = req.body;
+        const team = await findTeamOfUser(body.username);
+        if(!team) throw "User does not have a team";
+        else res.json({...team, error: false});
+    } catch (error) {
+        res.json({error: true, msg: error.toString()});
+    }
+});
+
+router.post("/questions/attempt/:level/:teamId", async (req,res) => {
+     try {
+        const body = req.body;
+        const row = parsedWithAnswers[Number(req.params.level)];
+        let answer;
+        for (let i = 0; i < row.length; i++) {
+            const element = row[i];
+            if(element.id === body.id){
+                answer = element.answer;
+            }
+        }
+        if(!answer) answer = [];
+
+        if(answer.includes(body.answer)){
+            await answerQuestion(req.params.teamId,body.id);
+            res.json({correct: true});
+        }
+        else{
+            res.json({correct: false});
+        }
+     } catch (error) {
+        res.json({error: true, msg: error.toString()});
+
+     }
+}); 
+
+router.get("/questions/done/:teamId", async (req,res) => {
+    const data = await getDoneQuestions(req.params.teamId);
+    res.json({done: data});
+});
+
+router.get("/admin5698712/team_rank", async (req,res) => {
+    try {
+        const allData = await getAllTeams();
+        const rank = [];
+        allData.forEach(el => {
+            const complete = el.finishedQuestions.length;
+            rank.push({team: el.teamName, complete: complete});
+        });
+        rank.sort((x,y) => {
+            return y.complete - x.complete;
+        });
+        res.json({ranks: rank});
+    } catch (error) {
+        res.json({error: true, msg: error.toString()});
+    }
 });
 
 router.get("*", async (req,res) => {
