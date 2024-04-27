@@ -67,6 +67,7 @@
         "title":"Find the figure",
         "html":"<div><p>Can you solve the following nonagram and determine what it is representing?</p><img src='./grid_blank.png' alt='blank_large_grid'/></div>",
         "answer":[
+           "bird",
            "Bird"
         ]
      }
