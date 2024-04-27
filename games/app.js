@@ -3,8 +3,10 @@ import routes from './routes/index.js'
 
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path'
+import { config } from 'dotenv';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
+config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
