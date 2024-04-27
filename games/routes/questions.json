@@ -60,13 +60,13 @@
         "html":"<div><p>You notice your TV has been acting very strange lately… It's only 16 different colors in the same order, over and over again. You jot down the different colors you see, you think there must be some reason to this order…</p><img src='./tv1.png' alt='color_palette See list below'/><br/><code>Or, in word-form: ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'lime', 'pink', 'cyan', 'peach', 'lilac', 'brown', 'gray', 'white', 'black']</code><p>You look at the TV again and suddenly this pattern appears…</p><img src='./tv2.png' alt='Large color_palette, see list below'/><br/><code>Or, in list form: ['indigo', 'violet', 'violet', 'indigo', 'violet', 'white', 'violet', 'blue', 'violet', 'cyan', 'violet', 'white', 'violet', 'lime', 'yellow', 'red', 'violet', 'gray', 'violet', 'orange', 'violet', 'green', 'violet', 'pink', 'violet', 'cyan', 'violet', 'white', 'violet', 'indigo', 'lime', 'green', 'yellow', 'red', 'lime', 'green', 'violet', 'green', 'violet', 'orange', 'lime', 'yellow', 'violet', 'indigo', 'yellow', 'red', 'violet', 'gray', 'violet', 'indigo', 'yellow', 'red', 'violet', 'orange', 'yellow', 'red', 'violet', 'brown', 'violet', 'black', 'lime', 'blue', 'yellow', 'orange']</code><p>Can you figure out the secret message?</p></div>",
         "answer":[
            "Vending machines scare me a lot!"
-        ]
+        ],
+        "caseSensitive": true
      },
      {
         "title":"Find the figure",
         "html":"<div><p>Can you solve the following nonagram and determine what it is representing?</p><img src='./grid_blank.png' alt='blank_large_grid'/></div>",
         "answer":[
-           "bird",
            "Bird"
         ]
      }
