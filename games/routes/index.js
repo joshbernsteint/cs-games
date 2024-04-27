@@ -9,7 +9,6 @@ import { answerQuestion, createTeam, findTeamOfUser, getAllTeams, getDoneQuestio
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const questions_path = path.resolve(__dirname, 'questions.json');
-const HTML_PATH = path.join(__dirname,'../../frontend/build/index.html');
 
 const router = Router();
 

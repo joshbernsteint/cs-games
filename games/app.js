@@ -10,8 +10,7 @@ config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
-
-
+const HTML_PATH = path.join(__dirname,'../frontend/build/index.html');
 
 
 app.use(express.static(path.join(__dirname,"../frontend/build/")));
