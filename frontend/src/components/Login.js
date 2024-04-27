@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import {Form, Button} from 'react-bootstrap';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ function Login(props){
     async function handleSubmit(e){
         e.preventDefault();
         const form = e.currentTarget;
-        const {data} = await axios.post("/login", {username: form[0].value, password: form[1].value});
+        const {data} = await axios.post("/login", {username: form[0].value.trim(), password: form[1].value.trim()});
         if(data.error){
             errorRef.current.innerText = data.msg;
             errorRef.current.hidden = false;
@@ -27,14 +27,8 @@ function Login(props){
             errorRef.current.hidden = true;
             props.setLoggedIn(true);
             props.setUsername(data.username);
-            const teamData = await axios.post("/teams/get_user", {username: data.username});
-            console.log(teamData.data);
-            if(!teamData.data.error) props.setTeamData(teamData.data);
-            navigate("/");
-
         }
     }
-
 
     return (
         <>

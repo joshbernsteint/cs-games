@@ -41,7 +41,7 @@ function Questions(props){
 
         async function handleSubmit(e){
             const form = e.currentTarget;
-            const ans = form[0].value;
+            const ans = form[0].value.trim();
             e.preventDefault();
             const {data} = await axios.post(`/questions/attempt/${curQuestion.level}/${props.teamData._id}`, {answer: ans, id: id});
             // console.log(data);
@@ -106,6 +106,7 @@ function Questions(props){
         ) : (
                 (!curQuestion) ? 
                     (<Container style={{padding: "2rem", width: "100%"}}>
+                    <h1>Score: {finishedQuestions.length}</h1>
                     {
                         questions.map((el,i) => (
                             <Row key={i} style={{paddingBottom: "1rem"}}>

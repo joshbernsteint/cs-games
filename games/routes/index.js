@@ -9,6 +9,7 @@ import { answerQuestion, createTeam, findTeamOfUser, getAllTeams, getDoneQuestio
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const questions_path = path.resolve(__dirname, 'questions.json');
+const HTML_PATH = path.join(__dirname,'../../frontend/build/index.html');
 
 const router = Router();
 
@@ -75,7 +76,7 @@ router.post("/login", async (req,res) => {
 
 router.get('/logout', async (req,res) => {
     res.clearCookie('LoginState');
-    req.session.destroy();
+    req.session.user = undefined;
     res.json({error: false, msg: "Logged out"});
 });
 
@@ -198,7 +199,7 @@ router.get("/admin/team_rank", async (req,res) => {
             rank.push({team: el.teamName, complete: complete, members: memberNames, lastUpdated: el.lastUpdated});
         }
         rank.sort((x,y) => {
-            return y.lastUpdated - x.lastUpdated;
+            return (x.complete === y.complete ? (x.lastUpdated - y.lastUpdated) : (y.complete - x.complete));
         });
         res.json({ranks: rank});
     } catch (error) {
@@ -209,7 +210,7 @@ router.get("/admin/team_rank", async (req,res) => {
 
 
 router.get("*", async (req,res) => {
-    res.sendFile(path.join(__dirname,'../public/build/index.html'));
+    res.sendFile(HTML_PATH);
 });
 
 export default router;

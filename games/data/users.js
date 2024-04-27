@@ -36,8 +36,10 @@ async function createUser(username, password){
     if(!insert_result.acknowledged || !insert_result.insertedId){
       throw "Error: User could not be created";
     }
+
+    const gotUser = await getUserById(insert_result.insertedId.toString());
   
-    return {insertedUser: true, username: name};
+    return {insertedUser: true, ...gotUser};
 }
 
 async function loginUser(username, password){

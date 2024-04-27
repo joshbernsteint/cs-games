@@ -6,6 +6,7 @@ import {
   Route,
   Link,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 
 import navStyles from './navstyles.module.css';
@@ -31,22 +32,31 @@ function App() {
 
     useEffect(() => {
       async function getUserData(){
-        const {data} = await axios.get('/get_data');
-        if(data.loggedIn){
-          // Get team data
-          const team_data = await axios.post('/teams/get_user', {username: data.username});
-          if(!team_data.data.error){
-            setTeamData(team_data.data);
-          }
-          setUsername(data.username);
-          setLoggedIn(true);
+        if(isLoggedIn && username){
+            // Get team data
+            const team_data = await axios.post('/teams/get_user', {username: username});
+            if(!team_data.data.error){
+              setTeamData(team_data.data);
+              navigate('/');
+            }
+            else{
+              navigate("/teams")
+            }
         }
         else{
-          navigate('/login');
+          const {data} = await axios.get('/get_data');
+          console.log(data);
+          if(data.loggedIn){
+            setUsername(data.username);
+            setLoggedIn(true);
+          }
+          else{
+            navigate('/login');
+          }
         }
       }
       getUserData();
-    }, []);
+    }, [isLoggedIn, username]);
 
 
     return (

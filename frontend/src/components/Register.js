@@ -24,9 +24,8 @@ function Register(props){
         else{
             errorRef.current.innerText = "";
             errorRef.current.hidden = true;
+            console.log(data);
             props.setLoggedIn(true);
-            props.setUsername(data.username);
-            navigate("/");
         }
     }
 

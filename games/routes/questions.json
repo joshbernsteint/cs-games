@@ -17,7 +17,7 @@
      },
      {
         "title":"Long Series",
-        "html":"<div>The series, 1<sup>1</sup> + 2<sup>2</sup> + 3<sup>3</sup> + ... + 10<sup>10</sup> = 10405071317</div>\\n              <div>Find the last ten digits of the series: 1<sup>1</sup> + 2<sup>2</sup> + 3<sup>3</sup> + ... + 1000<sup>1000<sup></div>",
+        "html":"<div>The series, 1<sup>1</sup> + 2<sup>2</sup> + 3<sup>3</sup> + ... + 10<sup>10</sup> = 10405071317</div>              <div>Find the last ten digits of the series: 1<sup>1</sup> + 2<sup>2</sup> + 3<sup>3</sup> + ... + 1000<sup>1000<sup></div>",
         "answer":[
            "9110846700"
         ]

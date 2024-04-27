@@ -45,7 +45,7 @@ function Admin({username, ...props}){
             <Button onClick={async () => {
                 const {data} = await axios.get("/admin/hideall");
                 setStage(data.newStage);
-            }}>Reset Questions</Button><br/>
+            }}>Reset Questions</Button><br/><br/>
             <Button onClick={async () => {
                 console.log('making request...');
                 await axios.get("/admin/reset_questions");
