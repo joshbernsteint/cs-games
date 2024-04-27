@@ -1,7 +1,7 @@
 import { dbConnection, closeConnection } from "../config/mongoConnection.js";
 import { config } from "dotenv";
 import { createUser } from "../data/users.js";
-config({path: "../"});
+config();
 console.log(process.env);
 const db = await dbConnection();
 await db.dropDatabase();
