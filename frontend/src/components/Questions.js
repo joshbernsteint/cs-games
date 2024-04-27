@@ -15,11 +15,11 @@ function Questions(props){
     
     async function refresh(){
         try {
-            const {data} = await axios.get("/question_src");
+            const {data} = await axios.get("/api/question_src");
             props.setQuestions(data.questions);
 
             if(props.teamData){
-                const doneQuestions = await axios.get(`/questions/done/${props.teamData._id}`);
+                const doneQuestions = await axios.get(`/api/questions/done/${props.teamData._id}`);
                 setFinishedQuestions(doneQuestions.data.done);
 
             }
@@ -43,7 +43,7 @@ function Questions(props){
             const form = e.currentTarget;
             const ans = form[0].value.trim();
             e.preventDefault();
-            const {data} = await axios.post(`/questions/attempt/${curQuestion.level}/${props.teamData._id}`, {answer: ans, id: id});
+            const {data} = await axios.post(`/api/questions/attempt/${curQuestion.level}/${props.teamData._id}`, {answer: ans, id: id});
             // console.log(data);
             if(!data.correct){
                 setEShow(true);

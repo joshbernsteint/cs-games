@@ -34,7 +34,7 @@ function App() {
       async function getUserData(){
         if(isLoggedIn && username){
             // Get team data
-            const team_data = await axios.post('/teams/get_user', {username: username});
+            const team_data = await axios.post('/api/teams/get_user', {username: username});
             if(!team_data.data.error){
               setTeamData(team_data.data);
               navigate('/');
@@ -44,7 +44,7 @@ function App() {
             }
         }
         else{
-          const {data} = await axios.get('/get_data');
+          const {data} = await axios.get('/api/get_data');
           if(data.loggedIn){
             setUsername(data.username);
             setLoggedIn(true);
@@ -84,7 +84,7 @@ function App() {
                             setUsername(undefined);
                             setTeamData(undefined);
                             setLoggedIn(false);
-                            await axios.get('/logout');
+                            await axios.get('/api/logout');
                           }}>Logout</Nav.Link>
                       </Nav>)
                         }

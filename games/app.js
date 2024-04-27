@@ -24,7 +24,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false
   }));
-app.use('/admin', async (req,res, next) => {
+app.use('/api/admin', async (req,res, next) => {
     if(req.session.user && req.session.user.username === "admin"){
         return next();
     }
@@ -33,11 +33,10 @@ app.use('/admin', async (req,res, next) => {
     }
     res.redirect('/login');
 });
-app.use('/', async (req,res, next) => {
-    // console.log(`${req.originalUrl} - ${req.method}`);
-    next();
-})
-app.use("/", routes);
+app.use("/api", routes);
+app.get("*", async (req,res) => {
+    res.sendFile(HTML_PATH);
+});
 
 
 

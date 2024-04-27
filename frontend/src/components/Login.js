@@ -16,7 +16,7 @@ function Login(props){
     async function handleSubmit(e){
         e.preventDefault();
         const form = e.currentTarget;
-        const {data} = await axios.post("/login", {username: form[0].value.trim(), password: form[1].value.trim()});
+        const {data} = await axios.post("/api/login", {username: form[0].value.trim(), password: form[1].value.trim()});
         if(data.error){
             errorRef.current.innerText = data.msg;
             errorRef.current.hidden = false;

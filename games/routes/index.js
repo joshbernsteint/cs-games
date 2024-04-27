@@ -209,8 +209,6 @@ router.get("/admin/team_rank", async (req,res) => {
 
 
 
-router.get("*", async (req,res) => {
-    res.sendFile(HTML_PATH);
-});
+
 
 export default router;

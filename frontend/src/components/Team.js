@@ -20,7 +20,7 @@ function Teams(props){
     async function handleCreate(event){
         const form = event.currentTarget;
         event.preventDefault();
-        const {data} = await axios.post("/teams/create", {teamName: form[0].value, password: form[1].value, username: props.username});
+        const {data} = await axios.post("/api/teams/create", {teamName: form[0].value, password: form[1].value, username: props.username});
         if(data.error){
             errorRef.current.innerText = data.msg;
             errorRef.current.hidden = false;
@@ -38,7 +38,7 @@ function Teams(props){
     async function handleJoin(e){
         const form = e.currentTarget;
         e.preventDefault();
-        const {data} = await axios.post("/teams/join", {teamName: form[0].value, password: form[1].value,username: props.username});
+        const {data} = await axios.post("/api/teams/join", {teamName: form[0].value, password: form[1].value,username: props.username});
         if(data.error){
             errorRef2.current.innerText = data.msg;
             errorRef2.current.hidden = false;

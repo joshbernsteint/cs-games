@@ -19,7 +19,7 @@ function Admin({username, ...props}){
 
 
     async function getRanks(){
-        const {data} = await axios.get("/admin/team_rank");
+        const {data} = await axios.get("/api/admin/team_rank");
         setRank(data.ranks);
     }
 
@@ -28,7 +28,7 @@ function Admin({username, ...props}){
             navigate("/");
         }
         async function getData(){
-            const stageGet = await axios.get("/admin");
+            const stageGet = await axios.get("/api/admin");
             setStage(stageGet.data.currentStage);
         }
         getData();
@@ -39,15 +39,15 @@ function Admin({username, ...props}){
             Current Stage: {stage}
             <br/>
             <Button onClick={async () => {
-                const {data} = await axios.get("/admin/advance");
+                const {data} = await axios.get("/api/admin/advance");
                 setStage(data.newStage);
             }}>Advance Questions</Button><br/><br/>
             <Button onClick={async () => {
-                const {data} = await axios.get("/admin/hideall");
+                const {data} = await axios.get("/api/admin/hideall");
                 setStage(data.newStage);
             }}>Reset Questions</Button><br/><br/>
             <Button onClick={async () => {
-                await axios.get("/admin/reset_questions");
+                await axios.get("/api/admin/reset_questions");
             }}>Reload All Questions From File</Button>
             <br/>
             <br/>

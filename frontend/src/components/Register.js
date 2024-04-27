@@ -15,7 +15,7 @@ function Register(props){
     async function handleSubmit(e){
         e.preventDefault();
         const form = e.currentTarget;
-        const {data} = await axios.post("/register", {username: form[0].value, password: form[1].value});
+        const {data} = await axios.post("/api/register", {username: form[0].value, password: form[1].value});
         if(data.error){
             errorRef.current.innerText = data.msg;
             errorRef.current.hidden = false;
