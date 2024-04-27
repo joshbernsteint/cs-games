@@ -21,14 +21,12 @@ function Teams(props){
         const form = event.currentTarget;
         event.preventDefault();
         const {data} = await axios.post("/teams/create", {teamName: form[0].value, password: form[1].value, username: props.username});
-        console.log(data);
         if(data.error){
             errorRef.current.innerText = data.msg;
             errorRef.current.hidden = false;
 
         }
         else{
-            console.log(data);
             errorRef.current.innerText = "";
             errorRef.current.hidden = true;
             props.setTeamData(data);
@@ -47,7 +45,6 @@ function Teams(props){
 
         }
         else{
-            console.log(data);
             errorRef2.current.innerText = "";
             errorRef2.current.hidden = true;
             props.setTeamData(data);

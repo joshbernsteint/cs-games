@@ -45,7 +45,6 @@ function App() {
         }
         else{
           const {data} = await axios.get('/get_data');
-          console.log(data);
           if(data.loggedIn){
             setUsername(data.username);
             setLoggedIn(true);

@@ -47,7 +47,6 @@ function Admin({username, ...props}){
                 setStage(data.newStage);
             }}>Reset Questions</Button><br/><br/>
             <Button onClick={async () => {
-                console.log('making request...');
                 await axios.get("/admin/reset_questions");
             }}>Reload All Questions From File</Button>
             <br/>
