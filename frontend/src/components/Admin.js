@@ -48,13 +48,13 @@ function Admin({username, ...props}){
                 rank.map((el,i) => (
                     <li key={i}>
                         <b>{el.team}: {el.complete}</b>
-                        <ol>
+                        <ul>
                             {
-                                rank.members.map((e2,i2) => (
+                                el.members.map((e2,i2) => (
                                     <li key={`${i}-${i2}`}>{e2}</li>
                                 ))
                             }
-                        </ol>
+                        </ul>
                     </li>
                 ))
                 }
