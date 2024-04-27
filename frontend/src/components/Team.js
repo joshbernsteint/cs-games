@@ -15,10 +15,6 @@ function Teams(props){
     const errorRef = useRef(undefined);
     const errorRef2 = useRef(undefined);
 
-    useEffect(() => {
-        if(!props.username) navigate("/login");
-        if(props.teamData) navigate("/");
-    }, []);
 
 
     async function handleCreate(event){

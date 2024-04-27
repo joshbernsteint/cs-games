@@ -21,35 +21,40 @@ import Teams from './components/Team';
 
 
 function App() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState(undefined);
-  const [questions, setQuestions] = useState([]);
-  const [teamData, setTeamData] = useState(undefined);
+
+  function Proxy(){
+    const [isLoggedIn, setLoggedIn] = useState(false);
+    const [username, setUsername] = useState(undefined);
+    const [questions, setQuestions] = useState([]);
+    const [teamData, setTeamData] = useState(undefined);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      async function getUserData(){
+        const {data} = await axios.get('/get_data');
+        if(data.loggedIn){
+          // Get team data
+          const team_data = await axios.post('/teams/get_user', {username: data.username});
+          if(!team_data.data.error){
+            setTeamData(team_data.data);
+          }
+          setUsername(data.username);
+          setLoggedIn(true);
+        }
+        else{
+          navigate('/login');
+        }
+      }
+      getUserData();
+    }, []);
 
 
-
-
-  return (
-    <div className="App">
-
-  
-      <Router>
-      <Navbar expand="lg" className={`${navStyles.main}`} sticky="top">
+    return (
+      <div>
+              <Navbar expand="lg" className={`${navStyles.main}`} sticky="top">
                     <Navbar.Brand style={{paddingLeft: ".5rem", color: "white", fontSize: "24pt"}}>
                       CS Games!
                     </Navbar.Brand>
-                    {/* <Navbar.Toggle /> */}
-                    {/* <Navbar.Collapse>
-                        <Nav>
-                            <Nav.Link as={Link} to="/" className={`${navStyles.nav_items}`}>Home</Nav.Link>
-                            {
-                              (username === "admin") ? (
-                                <Nav.Link as={Link} to="/admin" className={`${navStyles.nav_items}`}>Admin Page
-                                </Nav.Link>
-                              ) : (<></>)
-                            }
-                        </Nav>
-                    </Navbar.Collapse> */}
 
                     {/* Right aligned content */}
                     <Navbar.Collapse className="justify-content-end" style={{paddingRight: "1rem"}}>
@@ -66,10 +71,11 @@ function App() {
                               </Nav.Link>
                             ) : (<></>)
                           }
-                          <Nav.Link as="button" className={`${navStyles.nav_items}`} onClick={() => {
+                          <Nav.Link as="button" className={`${navStyles.nav_items}`} onClick={async () => {
                             setUsername(undefined);
                             setTeamData(undefined);
                             setLoggedIn(false);
+                            await axios.get('/logout');
                           }}>Logout</Nav.Link>
                       </Nav>)
                         }
@@ -86,9 +92,17 @@ function App() {
           <Route exact path="/register" element={<Register setLoggedIn={setLoggedIn} setUsername={setUsername}/>}/>
           <Route exact path="/admin" element={<Admin username={username}/>}/>
           <Route exact path="*" element={<>No</>}/>
-
-
         </Routes>
+      </div>
+    )
+  }
+
+  return (
+    <div className="App">
+
+  
+      <Router>
+          <Proxy />
       </Router>
 
 

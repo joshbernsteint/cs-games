@@ -83,10 +83,6 @@ function Questions(props){
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if(!props.teamData) navigate("/teams")
-    }, [props.teamData])
-
     return (
         (questions.length === 0) ? (
         <>

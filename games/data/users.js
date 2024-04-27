@@ -48,7 +48,7 @@ async function loginUser(username, password){
         const element = allUsers[i];
         if(element.username === name){
             if(!(await bcrypt.compare(psswrd, element.password))) throw "Incorrect username or password";
-            else return {loggedIn: true, username: name};
+            else return {loggedIn: true, ...element};
         }
     }
     throw 'Incorrect username or password';

@@ -1,12 +1,23 @@
 import { Router } from "express";
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path'
+import fs from 'fs';
 import { createUser,getUserById,loginUser } from "../data/users.js";
-import questions from './questions.js'
 import { answerQuestion, createTeam, findTeamOfUser, getAllTeams, getDoneQuestions, joinTeam } from "../data/teams.js";
 
 
-const [parsedQuestions,parsedWithAnswers] = (() => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const questions_path = path.resolve(__dirname, 'questions.json');
+
+const router = Router();
+
+let currentStage = 0;
+const maxStage = 4;
+
+function getQuestions(){
+    const fileData = fs.readFileSync(questions_path);
+    const questions =  JSON.parse(fileData.toString());
     const ret = [];
     const ret2 = [];
     for (let i = 0; i < questions.length; i++) {
@@ -23,15 +34,11 @@ const [parsedQuestions,parsedWithAnswers] = (() => {
         ret2.push(line2);
     }
     return [ret2, ret];
-})();
+}
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+let [parsedQuestions,parsedWithAnswers] = getQuestions();
 
-const router = Router();
 
-let currentStage = 0;
-const maxStage = 4;
 
 router.post("/register", async (req,res) => {
     try {
@@ -43,34 +50,36 @@ router.post("/register", async (req,res) => {
     }
 });
 
+router.get('/get_data', async (req,res) => {
+    if(req.cookies.LoginState && req.session && req.session.user){
+        res.json(req.session.user);
+    }
+    else{
+        res.json({error: true});
+    }
+});
+
 router.post("/login", async (req,res) => {
     try {
         const body = req.body;
         const result = await loginUser(body.username, body.password);
+        req.session.user = {
+            ...result
+        };
+        res.cookie("LoginState","true");
         res.json({...result, error: false});
     } catch (error) {
         res.json({error: true, msg: "Incorrect username or password"});
     }
 });
 
-router.get("/admin5698712/advance", async (req,res) => {
-    currentStage++;
-    if(currentStage > maxStage){
-        res.json({newStage: maxStage});
-    }
-    else{
-        res.json({newStage: currentStage});
-    }
+router.get('/logout', async (req,res) => {
+    res.clearCookie('LoginState');
+    req.session.destroy();
+    res.json({error: false, msg: "Logged out"});
 });
 
-router.get("/admin5698712/hideall", async (req,res) => {
-    currentStage = 0;
-    res.json({newStage: 0});
-});
 
-router.get("/admin5698712", async (req,res) => {
-    res.json({currentStage: currentStage});
-});
 
 router.get("/question_src", async (req,res) => {
     if(currentStage > 0){
@@ -148,7 +157,32 @@ router.get("/questions/done/:teamId", async (req,res) => {
     res.json({done: data});
 });
 
-router.get("/admin5698712/team_rank", async (req,res) => {
+
+router.get("/admin/advance", async (req,res) => {
+    currentStage++;
+    if(currentStage > maxStage){
+        res.json({newStage: maxStage});
+    }
+    else{
+        res.json({newStage: currentStage});
+    }
+});
+
+router.get("/admin/hideall", async (req,res) => {
+    currentStage = 0;
+    res.json({newStage: 0});
+});
+
+router.get("/admin", async (req,res) => {
+    res.json({currentStage: currentStage});
+});
+
+router.get('/admin/reset_questions', async (req,res) => {
+    [parsedQuestions,parsedWithAnswers] = getQuestions();
+    res.json({msg: "Questions reset"});
+});
+
+router.get("/admin/team_rank", async (req,res) => {
     try {
         const allData = await getAllTeams();
         const rank = [];
@@ -161,16 +195,18 @@ router.get("/admin5698712/team_rank", async (req,res) => {
                 memberNames.push(userData.username);
             }
             
-            rank.push({team: el.teamName, complete: complete, members: memberNames});
+            rank.push({team: el.teamName, complete: complete, members: memberNames, lastUpdated: el.lastUpdated});
         }
         rank.sort((x,y) => {
-            return y.complete - x.complete;
+            return y.lastUpdated - x.lastUpdated;
         });
         res.json({ranks: rank});
     } catch (error) {
         res.json({error: true, msg: error.toString()});
     }
 });
+
+
 
 router.get("*", async (req,res) => {
     res.sendFile(path.join(__dirname,'../public/build/index.html'));
