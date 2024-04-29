@@ -3,7 +3,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-function Teams(props){
+function Teams({mode, ...props}){
 
 
     const navigate = useNavigate();
@@ -73,10 +73,10 @@ function Teams(props){
 
 
             <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
+                <Modal.Header closeButton className={mode}>
                 <Modal.Title>Create a Team</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className={mode}>
                 <Form style={{textAlign: "left", width: "50%"}} onSubmit={handleCreate}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Enter a Team Name</Form.Label>

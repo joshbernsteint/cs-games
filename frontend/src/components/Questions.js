@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-function Questions(props){
+function Questions({mode, ...props}){
 
     const questions = props.questions;
     const [curQuestion, setQuestion] = useState(undefined);
@@ -70,7 +70,7 @@ function Questions(props){
                         <Form.Group className="mb-3" controlId="answerInput">
                             <Form.Label style={{display: "inline-block", paddingRight: "1rem", fontWeight: "bold"}}>Input your Answer Here: </Form.Label>
                             <Form.Control type="text" placeholder="Your Answer" style={{display: "inline-block", width: "20%", paddingLeft: "1rem", paddingRight: "1rem"}}/>
-                            <Button variant='success' type='submit' style={{marginLeft: "1rem"}}>Submit</Button>
+                            <Button variant='success' type='submit' style={{marginLeft: "1rem", marginBottom: "0.4rem", fontSize: "14pt"}}>Submit</Button>
                         </Form.Group>
                             <span id='feedback' className='error' style={{textAlign: "center"}} hidden={!errorShow}>Nope!</span>
                     </Form>
@@ -82,6 +82,7 @@ function Questions(props){
 
 
     const navigate = useNavigate();
+    const inDarkMode = mode === "dark";
 
     return (
         (questions.length === 0) ? (
@@ -116,7 +117,7 @@ function Questions(props){
                                         const complete = finishedQuestions.includes(e2.id);
                                         return (
                                         <Col key={`${i}=${i2}`}>
-                                                <Card style={{ width: '18rem' }}>
+                                                <Card style={{ width: '18rem' , backgroundColor: inDarkMode ? "gray" : "white", color: inDarkMode ? "white" : "black"}}>
                                                 <Card.Body>
                                                     <Card.Title>{e2.title}</Card.Title>
                                                     <Card.Text>

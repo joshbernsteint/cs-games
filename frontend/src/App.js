@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Stack, Nav, Navbar, Container, Col } from "react-bootstrap";
+import { Stack, Nav, Navbar, Container, Col, Button } from "react-bootstrap";
 import {
   BrowserRouter as Router,
   Routes,
@@ -28,6 +28,7 @@ function App() {
     const [username, setUsername] = useState(undefined);
     const [questions, setQuestions] = useState([]);
     const [teamData, setTeamData] = useState(undefined);
+    const [mode, setMode] = useState("dark");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -57,9 +58,13 @@ function App() {
       getUserData();
     }, [isLoggedIn, username]);
 
+    useEffect(() => {
+      document.body.className = mode;
+    }, [mode]);
+
 
     return (
-      <div>
+      <div style={{minHeight: "100%"}}>
               <Navbar expand="lg" className={`${navStyles.main}`} sticky="top">
                     <Navbar.Brand style={{paddingLeft: ".5rem", color: "white", fontSize: "24pt"}}>
                       CS Games!
@@ -89,14 +94,22 @@ function App() {
                       </Nav>)
                         }
                         {
-                          (teamData) ? (<><b>Team: </b> &nbsp; {teamData.teamName}
-                          </>) : (<></>)
+                          (teamData) ? (<div style={{border: ".1rem solid white", padding: ".25rem", borderRadius: "5px"}}><b>Team: </b> &nbsp; <span style={{fontStyle: "italic"}}>{teamData.teamName}</span>
+                          </div>) : (<></>)
                         }
+                            <Button onClick={() => {
+                            if(mode === "light"){
+                              setMode("dark");
+                            }
+                            else{
+                              setMode("light");
+                            }
+                          }} variant='secondary' style={{marginLeft: ".5rem"}}>Current Mode: {mode}</Button>
                     </Navbar.Collapse>
         </Navbar>
         <Routes>
-          <Route exact path="/" element={<Questions setQuestions={setQuestions} questions={questions} teamData={teamData}/>}/>
-          <Route exact path="/teams" element={<Teams username={username} setTeamData={setTeamData} teamData={teamData}/>}/>
+          <Route exact path="/" element={<Questions setQuestions={setQuestions} questions={questions} teamData={teamData} mode={mode}/>}/>
+          <Route exact path="/teams" element={<Teams username={username} setTeamData={setTeamData} teamData={teamData} mode={mode}/>}/>
           <Route exact path="/login" element={<Login setLoggedIn={setLoggedIn} setUsername={setUsername} setTeamData={setTeamData}/>}/>
           <Route exact path="/register" element={<Register setLoggedIn={setLoggedIn} setUsername={setUsername}/>}/>
           <Route exact path="/admin" element={<Admin username={username}/>}/>
