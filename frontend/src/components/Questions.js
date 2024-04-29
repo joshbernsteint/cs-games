@@ -32,7 +32,8 @@ function Questions({mode, ...props}){
       if(!curQuestion){
           refresh();
       }
-    }, [curQuestion]);
+    }, [curQuestion, props.teamData]);
+
 
     function Question({title,id, html}){
 
@@ -115,9 +116,10 @@ function Questions({mode, ...props}){
                                     el.map((e2,i2) => {
                                         // console.log(finishedQuestions);
                                         const complete = finishedQuestions.includes(e2.id);
+                                        const completeStyle = complete ?  {border: ".25rem solid green"} : {};
                                         return (
                                         <Col key={`${i}=${i2}`}>
-                                                <Card style={{ width: '18rem' , backgroundColor: inDarkMode ? "gray" : "white", color: inDarkMode ? "white" : "black"}}>
+                                                <Card style={{ width: '18rem' , backgroundColor: inDarkMode ? "gray" : "white", color: inDarkMode ? "white" : "black", ...completeStyle}}>
                                                 <Card.Body>
                                                     <Card.Title>{e2.title}</Card.Title>
                                                     <Card.Text>

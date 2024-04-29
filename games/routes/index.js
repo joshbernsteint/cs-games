@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import path, { dirname } from 'path'
 import fs from 'fs';
 import { createUser,getUserById,loginUser } from "../data/users.js";
-import { answerQuestion, createTeam, findTeamOfUser, getAllTeams, getDoneQuestions, joinTeam } from "../data/teams.js";
+import { answerQuestion, clearScores, createTeam, findTeamOfUser, getAllTeams, getDoneQuestions, joinTeam } from "../data/teams.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -135,6 +135,9 @@ router.post("/questions/attempt/:level/:teamId", async (req,res) => {
             const element = row[i];
             if(element.id === body.id){
                 answer = element.answer;
+                if(!element.caseSensitive){
+                    body.answer = body.answer.toLowerCase();
+                }
             }
         }
         if(!answer) answer = [];
@@ -159,12 +162,12 @@ router.get("/questions/done/:teamId", async (req,res) => {
 
 
 router.get("/admin/advance", async (req,res) => {
-    currentStage++;
-    if(currentStage > maxStage){
-        res.json({newStage: maxStage});
+    if(currentStage < maxStage){
+        currentStage++;
+        res.json({newStage: currentStage});
     }
     else{
-        res.json({newStage: currentStage});
+        res.json({newStage: maxStage});
     }
 });
 
@@ -180,6 +183,11 @@ router.get("/admin", async (req,res) => {
 router.get('/admin/reset_questions', async (req,res) => {
     [parsedQuestions,parsedWithAnswers] = getQuestions();
     res.json({msg: "Questions reset"});
+});
+
+router.get('/admin/reset_scores', async (req,res) => {
+    await clearScores();
+    res.json({sucess: true});
 });
 
 router.get("/admin/team_rank", async (req,res) => {

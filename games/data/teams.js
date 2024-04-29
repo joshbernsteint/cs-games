@@ -113,6 +113,15 @@ async function findTeamOfUser(username){
     return undefined;
 }
 
+async function clearScores(){
+    const allTeams = await getAllTeams();
+    const teamsCollection = await teams();
+    for (const team of allTeams) {
+        await teamsCollection.findOneAndUpdate({_id: new ObjectId(team._id)}, {$set: {finishedQuestions: []}})
+    }
+    return true;
+}
+
 
 export{
     createTeam,
@@ -120,5 +129,6 @@ export{
     getAllTeams,
     answerQuestion,
     getDoneQuestions,
-    findTeamOfUser
+    findTeamOfUser,
+    clearScores
 }
