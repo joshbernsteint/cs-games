@@ -1,3 +1,100 @@
+
 [
-   
-]
+    [
+       {
+          "title":"What does the fox say?",
+          "html":"<div><div>There are five houses of different colors next to each other. In each house lives a man. Each man has a unique nationality, an exclusive favorite drink, a distinct favorite brand of cigarettes, and keeps specific pets. Use all the clues below to fill the grid and answer the question: 'What is the country of the person that owns the fox?'</div><img src='./images/country_table.png'><ol><li>The Englishman lives in the red house.</li><li>The Spaniard owns the dog.</li><li>Coffee is drunk in the green house.</li><li>The Ukrainian drinks tea.</li><li>The green house is immediately to the right of the ivory house.</li><li>The Old Gold smoker owns snails.</li><li>Kools are smoked in the yellow house.</li><li>Milk is drunk in the middle house.</li><li>The Norwegian lives in the first house.</li><li>The man who smokes Chesterfields lives in the house next to the man with the fox.</li><li>Kools are smoked in the house next to the house where the horse is kept.</li><li>The Lucky Strike smoker drinks orange juice.</li><li>The Japanese smokes Parliaments.</li><li>The Norwegian lives next to the blue house.</li></ol></div>",
+          "answer":[
+              "norway"
+          ]
+       },
+       {
+          "title":"Let's Get Wordy",
+          "html":"<div>What word is pronounced the same if you take away four of its five letters?</div>",
+          "answer":[
+             "queue"
+          ]
+       },
+       {
+          "title":"Continued Heist",
+          "html": "<div><p>Dr. Akcam, after another amazing bank robbery, was looking through her loot and came across a very special set of coins.</p><p>When she arranges the coins in groups of two, there is a single coin left over. When she arranges the coins in groups of three, five, or six, there is also a single coin left over. But when she arranges the coins in groups of seven, there are no coins left over.</p><p>What is the fewest amount of coins in this special coin set?</p></div>",
+          "answer":[
+             "91"
+          ]
+       }
+    ],
+    [
+       {
+          "title":"Dominos",
+          "html":"<div><div>Imagine you have the following dominos:<pre><code>[100]  [ 0 ]     [ 1] <br/>[ 1 ]  [100]    [00]</code></pre>So X1 = 100, X2 = 0, and X3 = 1, Y1 = 1, Y2 = 100, and Y3 = 00.</div>Whenever you use X1, you have to use Y1 on the bottom, so for example: X1X2 would yield:<pre><code>1000<br/>1100</code></pre>What indices of (X, Y) pairs are needed in order for the sequence on the top to be the same as the on the bottom?</div>",
+          "answer":[
+              "1, 3, 1, 1, 3, 2, 2",
+              "1,3,1,1,3,2,2"
+          ]
+       },
+       {
+          "title":"Connect the Dots",
+          "html": "<div><p>How many squares can you create in this image by connecting any 4 purple dots. And remember the corners of your newly made squares have to be on a dot in the grid!</p><img src='images/dots.png' /></div>",
+          "answer":[
+             "11"
+          ]
+       },
+       {
+          "title":"Garage Sale",
+          "html": "<div>You're at your neighbor Favardin's house where he's having a garage sale. He's trying to sell old laptops he's collected over the years. A Macbook and a Surface are surprisingly sold for the same price at $1728 while he sold a Chromebook for $2304. How much do you think he is selling a Thinkpad for?</div>",
+          "answer":[
+             "1152"
+          ]
+       }
+    ],
+    [
+       {
+          "title":"Collatz Problem",
+          "html": "<div><ol><li>Choose a positive Integer.</li><li>If the number is even, divide it by 2 and if it is odd multiply by 3 then add 1.</li><li>Repeat step 2 with the new number.</li></ol><p>The Collatz conjecture asserts that following these steps will always lead to 1, for any starting integer greater than 0.</p><p>Find how many steps it takes to reach 1, starting from 27.</p></div>",
+          "answer":[
+             "111"
+          ]
+       },
+       {
+          "title":"Poisoned Apples",
+          "html":"<div>There are two bowls that you and a challenger must eat from.  After flipping a coin you were selected to pick the bowl that each of you would eat from.  In the first bowl there are <b>three</b> out of <b>five</b> poisonous apples.  In the second bowl, there are <b>two</b> out of <b>five</b> poisonous apples.  Whoever eats from the first bowl must eat two apples at random from the bowl.  Whoever eats from the second bowl must eat three random apples from the second bowl.  What's the probability (as a percentage) of surviving for the most survivable bowl?</div>",
+          "answer":[
+             "10%",
+             "10"
+          ]
+       },
+       {
+          "title":"Opened and Closed",
+          "html": "<div>On the final moving out-day, all 4,092 freshmen decided to prank the professors by opening and closing a set of 4,092 doors. The first freshman opens every single door. The second freshman goes to every second door and closes opened doors and opens unopened doors. The third freshman goes to every third door and does the same as the second freshman. This goes on until the 4,092nd freshman opens/closes each 4,092nd  closed/opened door. How many of these doors will be opened once this process is completed?</div>",
+          "answer":[
+             "63"
+          ]
+       }
+    ],
+    [
+       {
+          "title":"Let's make a deal",
+          "html": "<div><p>You're dealt the cards seen below by Ash:</p><img src='./images/cards.png' width='50%'/><p>Ash tells Sue only the suit of the secret card and tells Valerie only the value of the secret card: </p><ol><li>First, Valerie says, 'I don't know the winning card.'</li><li>Then, Sue says, 'Now I know the card is an Ace, King, or Queen.'</li><li>Finally, Valerie says, 'I know the winning card now.'</li></ol><p>The winning card is one of these choices. Which is the winning card?</p></div>",
+          "answer":[
+             "the queen of spades",
+             "queen of spades"
+          ]
+       },
+       {
+          "title":"Midnight Bridge",
+          "html": "<div>Four travelers have to cross a shaky bridge at night. The bridge can only bear the weight of two persons at a given time and a flashlight is needed to cross the bridge. There is only one  flashlight available among the group. Now, no traveler walks with the same speed: it takes 1 minute for the first traveler to cross the bridge, whereas it takes 2, 5 and 10 minutes for second, third and fourth travelers to perform the same task. Moreover, while crossing the bridge in a set of two, the faster traveler has to match the pace of the slower one. Hence, how much time (least amount) will it take for all travelers to cross the bridge?</div>",
+          "answer":[
+             "17 min",
+             "17",
+             "17min"
+          ]
+       },
+       {
+          "title":"Get that booty",
+          "html":"<div><p>Coconut wants to collect coins from 30 treasure chests scattered across the island. There's only one caveat for his collection….if he takes the same amount from two adjacent chests, it sets off a booby trap. He has to follow the instructions his captain gave him but doesn't want to get caught in the traps. Help Coconut achieve the max sum from what will be collected so he doesn't set off the traps.</p><p>You are given an array 'nums' of 'n' integers. Your task is to find the maximum sum of a subsequence 's' such that no two elements in 's' are adjacent in the original array.</p>Formally, you need to find a subset 's' of 'nums' such that the sum of 's' is maximum, and for any two indices 'i' and 'j' in 's', the absolute difference between them is greater than 1.<p>Given this problem, what would be the output for this input array?: </p><code>[ 2, 6, 1, 7, 3, 1, 3, 7, 3, 6, 8, 7, 9, 6, 9, 7, 10, 6, 8, 8, 2, 6, 10, 7, 10, 6, 8, 8, 4, 2 ]</code></div>",
+          "answer":[
+             "74"
+          ]
+       }
+    ]
+  ]
