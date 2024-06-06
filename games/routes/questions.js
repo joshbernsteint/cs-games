@@ -28,12 +28,12 @@ export default [
       {
         title: "Steal from the Vault!",
         html: '<div><p>Dr. Akcam, in her quest to rob a bank, has finally entered the bank vault! To her dismay, this is no ordinary bank vault, this bank vault is completely tilted! The floor is angled and slippery enough in a way that she can only move herself down and to the right. Along the maze, there are gold coins of varying values. Based on the floor plan (with numbers in a cell representing the value of the gold coin in that spot), what is the maximum amount of money Dr. Akcam can rob from the bank vault by moving from her entrance point in the top left of the vault down to the exit in the bottom right?</p><img src="./coin_collecting.png" alt="coin_collection_problem"/></div>',
-        answer: ['42'],
+        answer: ['43'],
       },
       {
         title: "Space Donuts",
         html: `<div><p>In a pixelated galaxy far, far away, there are space donuts! Each space donut is represented by a binary sprinkle code. The Master Space Baker combined three types of donuts:</p><ol><li> Type A: 0b11001010 (in binary)</li><li> Type B:  0b10111011 (in binary)</li><li> Type C:  0b11100101 (in binary)</li></ol><p>The Baker's special formula: <br><ol><li> Take the sum of Type A and Type B. </li><li> Multiply the result by Type C. </li><li> Subtract the square of Type B. </li><li> Finally, find the remainder when divided by the Galactic Lucky Number 7. </li></ol><p>What is the cosmic residue of this intergalactic equation?</p></div>`,
-        answer: [],
+        answer: ['5'],
       },
     ],
     [

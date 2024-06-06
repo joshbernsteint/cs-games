@@ -61,6 +61,7 @@ async function joinTeam(teamName, password, username){
         if(element.teamName === tName){
             letFound = true;
             if(!(await bcrypt.compare(psswrd, element.password))) throw "Incorrect password or name";
+            else if(element.members.length + 1 > 3) throw "Team is already at capacity";
             else break;
         }
     }
