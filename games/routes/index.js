@@ -1,12 +1,23 @@
 import { Router } from "express";
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path'
-import { createUser,loginUser } from "../data/users.js";
-import questions from './questions.js'
-import { answerQuestion, createTeam, findTeamOfUser, getAllTeams, getDoneQuestions, joinTeam } from "../data/teams.js";
+import fs from 'fs';
+import { createUser,getUserById,loginUser } from "../data/users.js";
+import { answerQuestion, clearScores, createTeam, findTeamOfUser, getAllTeams, getDoneQuestions, joinTeam } from "../data/teams.js";
 
 
-const [parsedQuestions,parsedWithAnswers] = (() => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const questions_path = path.resolve(__dirname, 'questions.json');
+
+const router = Router();
+
+let currentStage = 0;
+const maxStage = 4;
+
+function getQuestions(){
+    const fileData = fs.readFileSync(questions_path);
+    const questions =  JSON.parse(fileData.toString());
     const ret = [];
     const ret2 = [];
     for (let i = 0; i < questions.length; i++) {
@@ -23,15 +34,11 @@ const [parsedQuestions,parsedWithAnswers] = (() => {
         ret2.push(line2);
     }
     return [ret2, ret];
-})();
+}
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+let [parsedQuestions,parsedWithAnswers] = getQuestions();
 
-const router = Router();
 
-let currentStage = 0;
-const maxStage = 4;
 
 router.post("/register", async (req,res) => {
     try {
@@ -43,34 +50,36 @@ router.post("/register", async (req,res) => {
     }
 });
 
+router.get('/get_data', async (req,res) => {
+    if(req.cookies.LoginState && req.session && req.session.user){
+        res.json(req.session.user);
+    }
+    else{
+        res.json({error: true});
+    }
+});
+
 router.post("/login", async (req,res) => {
     try {
         const body = req.body;
         const result = await loginUser(body.username, body.password);
+        req.session.user = {
+            ...result
+        };
+        res.cookie("LoginState","true");
         res.json({...result, error: false});
     } catch (error) {
         res.json({error: true, msg: "Incorrect username or password"});
     }
 });
 
-router.get("/admin5698712/advance", async (req,res) => {
-    currentStage++;
-    if(currentStage > maxStage){
-        res.json({newStage: maxStage});
-    }
-    else{
-        res.json({newStage: currentStage});
-    }
+router.get('/logout', async (req,res) => {
+    res.clearCookie('LoginState');
+    req.session.user = undefined;
+    res.json({error: false, msg: "Logged out"});
 });
 
-router.get("/admin5698712/hideall", async (req,res) => {
-    currentStage = 0;
-    res.json({newStage: 0});
-});
 
-router.get("/admin5698712", async (req,res) => {
-    res.json({currentStage: currentStage});
-});
 
 router.get("/question_src", async (req,res) => {
     if(currentStage > 0){
@@ -126,6 +135,9 @@ router.post("/questions/attempt/:level/:teamId", async (req,res) => {
             const element = row[i];
             if(element.id === body.id){
                 answer = element.answer;
+                if(!element.caseSensitive){
+                    body.answer = body.answer.toLowerCase();
+                }
             }
         }
         if(!answer) answer = [];
@@ -148,16 +160,53 @@ router.get("/questions/done/:teamId", async (req,res) => {
     res.json({done: data});
 });
 
-router.get("/admin5698712/team_rank", async (req,res) => {
+
+router.get("/admin/advance", async (req,res) => {
+    if(currentStage < maxStage){
+        currentStage++;
+        res.json({newStage: currentStage});
+    }
+    else{
+        res.json({newStage: maxStage});
+    }
+});
+
+router.get("/admin/hideall", async (req,res) => {
+    currentStage = 0;
+    res.json({newStage: 0});
+});
+
+router.get("/admin", async (req,res) => {
+    res.json({currentStage: currentStage});
+});
+
+router.get('/admin/reset_questions', async (req,res) => {
+    [parsedQuestions,parsedWithAnswers] = getQuestions();
+    res.json({msg: "Questions reset"});
+});
+
+router.get('/admin/reset_scores', async (req,res) => {
+    await clearScores();
+    res.json({sucess: true});
+});
+
+router.get("/admin/team_rank", async (req,res) => {
     try {
         const allData = await getAllTeams();
         const rank = [];
-        allData.forEach(el => {
+        for (let j = 0; j < allData.length; j++) {
+            const el = allData[j];
             const complete = el.finishedQuestions.length;
-            rank.push({team: el.teamName, complete: complete});
-        });
+            const memberNames = [];
+            for (let i = 0; i < el.members.length; i++) {
+                const userData = await getUserById(el.members[i]);
+                memberNames.push(userData.username);
+            }
+            
+            rank.push({team: el.teamName, complete: complete, members: memberNames, lastUpdated: el.lastUpdated});
+        }
         rank.sort((x,y) => {
-            return y.complete - x.complete;
+            return (x.complete === y.complete ? (x.lastUpdated - y.lastUpdated) : (y.complete - x.complete));
         });
         res.json({ranks: rank});
     } catch (error) {
@@ -165,8 +214,8 @@ router.get("/admin5698712/team_rank", async (req,res) => {
     }
 });
 
-router.get("*", async (req,res) => {
-    res.sendFile(path.join(__dirname,'../public/build/index.html'));
-});
+
+
+
 
 export default router;

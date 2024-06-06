@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
+    "_prod": "sudo /home/ubuntu/.nvm/versions/node/v21.7.3/bin/node  app.js",
+    "prod": "screen -L -dmS csgames npm run _prod",
     "dev": "nodemon app.js",
+    "reset": "node tasks/reset.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,7 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
+    "express-session": "^1.18.0",
     "mongodb": "^6.3.0",
     "nodemon": "^3.0.2"
   }

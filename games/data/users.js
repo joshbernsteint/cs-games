@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { users } from "../config/mongoCollections.js";
+import {ObjectId} from 'mongodb'
 
 const saltRounds = 5;
 function checkAndTrim(str,arg_name){
@@ -35,8 +36,10 @@ async function createUser(username, password){
     if(!insert_result.acknowledged || !insert_result.insertedId){
       throw "Error: User could not be created";
     }
+
+    const gotUser = await getUserById(insert_result.insertedId.toString());
   
-    return {insertedUser: true, username: name};
+    return {insertedUser: true, ...gotUser};
 }
 
 async function loginUser(username, password){
@@ -47,7 +50,7 @@ async function loginUser(username, password){
         const element = allUsers[i];
         if(element.username === name){
             if(!(await bcrypt.compare(psswrd, element.password))) throw "Incorrect username or password";
-            else return {loggedIn: true, username: name};
+            else return {loggedIn: true, ...element};
         }
     }
     throw 'Incorrect username or password';
@@ -61,10 +64,19 @@ async function getAllUsers(){
     return all;
   }
   
-  async function getUser(username){
+async function getUser(username){
     const name = checkAndTrim(username, "username");
     const usersCollection = await users();
     const getResult = await usersCollection.findOne({username: name});
+    if(getResult === null) throw "user could not be found";
+    return getResult;
+}
+
+async function getUserById(userId){
+    const id = checkAndTrim(userId, "userId");
+    if(!ObjectId.isValid(id)) throw 'userId must be a valid ObjectId';
+    const usersCollection = await users();
+    const getResult = await usersCollection.findOne({_id: new ObjectId(id)});
     if(getResult === null) throw "user could not be found";
     return getResult;
 }
@@ -74,4 +86,5 @@ export{
     createUser,
     loginUser,
     getUser,
+    getUserById,
 }

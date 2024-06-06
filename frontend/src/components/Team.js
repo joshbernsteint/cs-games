@@ -3,7 +3,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-function Teams(props){
+function Teams({mode, ...props}){
 
 
     const navigate = useNavigate();
@@ -15,24 +15,18 @@ function Teams(props){
     const errorRef = useRef(undefined);
     const errorRef2 = useRef(undefined);
 
-    useEffect(() => {
-        if(!props.username) navigate("/login");
-        if(props.teamData) navigate("/");
-    }, []);
 
 
     async function handleCreate(event){
         const form = event.currentTarget;
         event.preventDefault();
-        const {data} = await axios.post("/teams/create", {teamName: form[0].value, password: form[1].value, username: props.username});
-        console.log(data);
+        const {data} = await axios.post("/api/teams/create", {teamName: form[0].value, password: form[1].value, username: props.username});
         if(data.error){
             errorRef.current.innerText = data.msg;
             errorRef.current.hidden = false;
 
         }
         else{
-            console.log(data);
             errorRef.current.innerText = "";
             errorRef.current.hidden = true;
             props.setTeamData(data);
@@ -44,14 +38,13 @@ function Teams(props){
     async function handleJoin(e){
         const form = e.currentTarget;
         e.preventDefault();
-        const {data} = await axios.post("/teams/join", {teamName: form[0].value, password: form[1].value,username: props.username});
+        const {data} = await axios.post("/api/teams/join", {teamName: form[0].value, password: form[1].value,username: props.username});
         if(data.error){
             errorRef2.current.innerText = data.msg;
             errorRef2.current.hidden = false;
 
         }
         else{
-            console.log(data);
             errorRef2.current.innerText = "";
             errorRef2.current.hidden = true;
             props.setTeamData(data);
@@ -80,10 +73,10 @@ function Teams(props){
 
 
             <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
+                <Modal.Header closeButton className={mode}>
                 <Modal.Title>Create a Team</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className={mode}>
                 <Form style={{textAlign: "left", width: "50%"}} onSubmit={handleCreate}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Enter a Team Name</Form.Label>

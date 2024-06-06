@@ -3,7 +3,13 @@ import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-
+function formatDate(timestamp){
+    const d = new Date(timestamp);
+    const h = String(d.getHours()).padStart(2,'0');
+    const m = String(d.getMinutes()).padStart(2,'0');
+    const s = String(d.getSeconds()).padStart(2,'0');
+    return `${h}:${m}:${s}`;
+}
 
 function Admin({username, ...props}){
 
@@ -13,7 +19,7 @@ function Admin({username, ...props}){
 
 
     async function getRanks(){
-        const {data} = await axios.get("/admin5698712/team_rank");
+        const {data} = await axios.get("/api/admin/team_rank");
         setRank(data.ranks);
     }
 
@@ -22,7 +28,7 @@ function Admin({username, ...props}){
             navigate("/");
         }
         async function getData(){
-            const stageGet = await axios.get("/admin5698712");
+            const stageGet = await axios.get("/api/admin");
             setStage(stageGet.data.currentStage);
         }
         getData();
@@ -33,13 +39,16 @@ function Admin({username, ...props}){
             Current Stage: {stage}
             <br/>
             <Button onClick={async () => {
-                const {data} = await axios.get("/admin5698712/advance");
+                const {data} = await axios.get("/api/admin/advance");
                 setStage(data.newStage);
             }}>Advance Questions</Button><br/><br/>
             <Button onClick={async () => {
-                const {data} = await axios.get("/admin5698712/hideall");
+                const {data} = await axios.get("/api/admin/hideall");
                 setStage(data.newStage);
-            }}>Reset Questions</Button>
+            }}>Reset Questions</Button><br/><br/>
+            <Button onClick={async () => {
+                await axios.get("/api/admin/reset_questions");
+            }}>Reload All Questions From File</Button>
             <br/>
             <br/>
             <Button onClick={async () => getRanks()}>Get Team Rank List</Button>
@@ -47,7 +56,14 @@ function Admin({username, ...props}){
             {
                 rank.map((el,i) => (
                     <li key={i}>
-                        <b>{el.team}</b>
+                        <b>{el.team}: {el.complete}</b>&nbsp;<i>({formatDate(el.lastUpdated)})</i>
+                        <ul>
+                            {
+                                el.members.map((e2,i2) => (
+                                    <li key={`${i}-${i2}`}>{e2}</li>
+                                ))
+                            }
+                        </ul>
                     </li>
                 ))
                 }

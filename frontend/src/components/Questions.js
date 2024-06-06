@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-function Questions(props){
+function Questions({mode, ...props}){
 
     const questions = props.questions;
     const [curQuestion, setQuestion] = useState(undefined);
@@ -15,11 +15,11 @@ function Questions(props){
     
     async function refresh(){
         try {
-            const {data} = await axios.get("/question_src");
+            const {data} = await axios.get("/api/question_src");
             props.setQuestions(data.questions);
 
             if(props.teamData){
-                const doneQuestions = await axios.get(`/questions/done/${props.teamData._id}`);
+                const doneQuestions = await axios.get(`/api/questions/done/${props.teamData._id}`);
                 setFinishedQuestions(doneQuestions.data.done);
 
             }
@@ -32,7 +32,8 @@ function Questions(props){
       if(!curQuestion){
           refresh();
       }
-    }, [curQuestion]);
+    }, [curQuestion, props.teamData]);
+
 
     function Question({title,id, html}){
 
@@ -41,9 +42,9 @@ function Questions(props){
 
         async function handleSubmit(e){
             const form = e.currentTarget;
-            const ans = form[0].value;
+            const ans = form[0].value.trim();
             e.preventDefault();
-            const {data} = await axios.post(`/questions/attempt/${curQuestion.level}/${props.teamData._id}`, {answer: ans, id: id});
+            const {data} = await axios.post(`/api/questions/attempt/${curQuestion.level}/${props.teamData._id}`, {answer: ans, id: id});
             // console.log(data);
             if(!data.correct){
                 setEShow(true);
@@ -70,7 +71,7 @@ function Questions(props){
                         <Form.Group className="mb-3" controlId="answerInput">
                             <Form.Label style={{display: "inline-block", paddingRight: "1rem", fontWeight: "bold"}}>Input your Answer Here: </Form.Label>
                             <Form.Control type="text" placeholder="Your Answer" style={{display: "inline-block", width: "20%", paddingLeft: "1rem", paddingRight: "1rem"}}/>
-                            <Button variant='success' type='submit' style={{marginLeft: "1rem"}}>Submit</Button>
+                            <Button variant='success' type='submit' style={{marginLeft: "1rem", marginBottom: "0.4rem", fontSize: "14pt"}}>Submit</Button>
                         </Form.Group>
                             <span id='feedback' className='error' style={{textAlign: "center"}} hidden={!errorShow}>Nope!</span>
                     </Form>
@@ -82,10 +83,7 @@ function Questions(props){
 
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if(!props.teamData) navigate("/teams")
-    }, [props.teamData])
+    const inDarkMode = mode === "dark";
 
     return (
         (questions.length === 0) ? (
@@ -110,6 +108,7 @@ function Questions(props){
         ) : (
                 (!curQuestion) ? 
                     (<Container style={{padding: "2rem", width: "100%"}}>
+                    <h1>Score: {finishedQuestions.length}</h1>
                     {
                         questions.map((el,i) => (
                             <Row key={i} style={{paddingBottom: "1rem"}}>
@@ -117,9 +116,10 @@ function Questions(props){
                                     el.map((e2,i2) => {
                                         // console.log(finishedQuestions);
                                         const complete = finishedQuestions.includes(e2.id);
+                                        const completeStyle = complete ?  {border: ".25rem solid green"} : {};
                                         return (
                                         <Col key={`${i}=${i2}`}>
-                                                <Card style={{ width: '18rem' }}>
+                                                <Card style={{ width: '18rem' , backgroundColor: inDarkMode ? "gray" : "white", color: inDarkMode ? "white" : "black", ...completeStyle}}>
                                                 <Card.Body>
                                                     <Card.Title>{e2.title}</Card.Title>
                                                     <Card.Text>
